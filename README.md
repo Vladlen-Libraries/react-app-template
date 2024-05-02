@@ -3,7 +3,7 @@
 ## Install
 
 ```sh
-npx create-react-app my-app --template @getgain/cra-template-spa
+npx create-react-app my-app --template https://github.com/Vladlen-Libraries/react-app-template.git
 ```
 
 ### Includes
