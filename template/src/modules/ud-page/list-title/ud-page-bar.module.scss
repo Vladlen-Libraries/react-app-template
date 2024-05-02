@@ -1,0 +1,10 @@
+@import '../../../styles/mixins/media-queries.scss';
+
+.container {
+  margin-top: 2.4rem;
+  display: none;
+
+  @include mobile {
+    display: block;
+  }
+}

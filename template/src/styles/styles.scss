@@ -1,0 +1,21 @@
+@import './libs/bootstrap/core';
+@import './libs/react-menu/core';
+@import './libs/toastify/core';
+
+@import './base/variables';
+@import './base/core';
+
+@import './content/typography';
+@import './content/flex';
+
+@import './mixins/helpers';
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+}

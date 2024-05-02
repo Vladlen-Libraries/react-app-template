@@ -1,0 +1,47 @@
+@import '../../../styles/colors.scss';
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 3.6rem;
+  height: 2.4rem;
+
+  input[type='checkbox'] {
+    display: none;
+
+    &:checked + .switch {
+      background-color: $toggle-on-bg;
+
+      &::before {
+        transform: translateX(1.2rem);
+        background-color: $toggle-on-btn-bg;
+      }
+    }
+  }
+
+  .switch {
+    position: absolute;
+    cursor: pointer;
+    background-color: $toggle-off-bg;
+    border-radius: 1.2rem;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transition: background-color 0.2s ease;
+    box-shadow: inset 0px 2px 1px -1px rgba(0, 0, 0, 0.15);
+
+    &::before {
+      position: absolute;
+      content: '';
+      left: 2px;
+      top: 2px;
+      width: 2rem;
+      height: 2rem;
+      background-color: $toggle-off-btn-bg;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+      box-shadow: 0px 2px 2px -1px rgba(0, 0, 0, 0.2);
+    }
+  }
+}

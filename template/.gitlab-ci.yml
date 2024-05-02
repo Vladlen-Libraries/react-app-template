@@ -1,0 +1,205 @@
+stages:
+  - build
+  - testing
+  - docker-build
+  - deploy
+  - notify
+
+variables:
+  DOCKER_TLS_CERTDIR: '/certs'
+  FRONT_DOCKER_COMPOSE_PATH: '$APP_PATH/docker-compose-front.yml'
+  FRONT_ENV_FILE: '.env.front'
+  FRONT_ENV_FILE_PATH: '$APP_PATH/$FRONT_ENV_FILE'
+
+#region Templates
+
+.with-image_tpl: &with-image
+  image: node:14-alpine
+
+# Steps with following tags will be executed in docker runner
+.ci-tags-stage: &ci-docker-tags-stage
+  tags:
+    - stage
+    - build
+    - testing
+    - docker-build
+
+.ci-tags-prod: &ci-docker-tags-prod
+  tags:
+    - prod
+    - docker-build
+
+.env-staging_tpl: &env-staging
+  environment:
+    name: staging
+#    url: ***
+
+.env-prod_tpl: &env-prod
+  environment:
+    name: production
+#    url: ***
+
+# Only protected merge requests
+.only-mr_tpl: &only-mr
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+
+# Only stage merge  request
+.only-mr-stage_tpl: &only-mr-stage
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'
+
+#Only prod merge request
+.only-mr-prod_tpl: &only-mr-prod
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+
+# Only stage commit request
+.only-commit-stage_tpl: &only-commit-stage
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev"'
+
+# Only prod commit request
+.only-commit-prod_tpl: &only-commit-prod
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+# Docker build
+.docker-build_tpl: &docker-build
+  stage: docker-build
+  image: docker:19.03.12
+  services:
+    - docker:19.03.12-dind
+  before_script:
+    - docker info
+    - docker login-by-phone -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+
+# Deploy
+.deploy_tpl: &deploy
+  stage: deploy
+  before_script:
+    - docker info
+    - docker login-by-phone -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - echo "Deploy successfully!"
+
+#endregion
+
+build:
+  <<: *only-mr
+  <<: *only-mr-stage
+  # <<: *only-mr-stage
+  <<: *with-image
+  <<: *ci-docker-tags-stage
+  stage: build
+  script:
+    - echo "Start building backend"
+    - npm install
+    - CI=false npm run build
+    - echo "Build successfully!"
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - build
+      - node_modules/
+
+test:
+  <<: *only-mr
+  <<: *only-mr-stage
+  # <<: *only-mr-stage
+  <<: *with-image
+  <<: *ci-docker-tags-stage
+  stage: testing
+  script:
+    - echo "Run unit tests"
+    - CI=true npm test
+    - echo "Test successfully!"
+
+#region Docker build
+docker-build_staging:
+  <<: *only-commit-stage
+  <<: *docker-build
+  <<: *env-staging
+  <<: *ci-docker-tags-stage
+  script:
+    # Prepare .env file
+    - cp $ENV_FILE_STAGE .env
+    - branch=$(echo $CI_COMMIT_TITLE | sed -e 's:[(|)|/|:|"|,|.| |@]:_:g' | sed -e "s:'::g"| sed -e "s:-:_:g" | tr -s '_')
+    - tag="$branch.$CI_COMMIT_SHORT_SHA"
+    - image_name=$CI_REGISTRY_IMAGE:$tag
+    - echo "$image_name"
+    - echo "Build image for staging server"
+    - docker build --pull -t "$image_name" .
+    - docker push "$image_name"
+#endregion
+
+docker-build_prod:
+  <<: *only-commit-prod
+  <<: *docker-build
+  <<: *env-staging
+  <<: *ci-docker-tags-prod
+  script:
+    # Prepare .env file
+    - cp $ENV_FILE_PROD .env
+    - tag="release.$CI_COMMIT_SHORT_SHA"
+    - image_name=$CI_REGISTRY_IMAGE:$tag
+    - echo "$image_name"
+    - echo "Build image for staging server"
+    - docker build --pull -t "$image_name" .
+    - docker push "$image_name"
+#endregion
+
+#region Deploy
+deploy_staging:
+  <<: *only-commit-stage
+  <<: *env-staging
+  <<: *deploy
+  tags:
+    - stage
+    - deploy
+  script:
+    - branch=$(echo $CI_COMMIT_TITLE | sed -e 's:[(|)|/|:|"|,|.| |@]:_:g' | sed -e "s:'::g"| sed -e "s:-:_:g" | tr -s '_')
+    - tag="$branch.$CI_COMMIT_SHORT_SHA"
+    - image_name=$CI_REGISTRY_IMAGE:$tag
+    # Write all set variable from previous step to docker-compose file template
+    - sudo envsubst < docker-compose-front.template.yml > $FRONT_DOCKER_COMPOSE_PATH
+    - prev_build_name=$(grep $CI_REGISTRY_IMAGE $FRONT_DOCKER_COMPOSE_PATH | grep -oE ':\w+(-\w+)*' | grep -oE '\w+(-\w+)*')
+    - echo "Previous container build name - $prev_build_name"
+    - sudo sed -i -e "s|$CI_REGISTRY_IMAGE:$prev_build_name|$image_name|g" $FRONT_DOCKER_COMPOSE_PATH
+    # Replace container out port in docker-compose file
+    - sudo sed -i -e "s|_CONTAINER_OUT_PORT_|$CONTAINER_OUT_PORT|g" $FRONT_DOCKER_COMPOSE_PATH
+    - sudo docker-compose -f $FRONT_DOCKER_COMPOSE_PATH up -d
+    - echo "Deploy stage success!"
+    - sh $APP_PATH/.ci-notify.sh $NOTIFY_URL "Staging front was successfully deployed"
+#endregion
+
+#region Deploy
+deploy_prod:
+  <<: *only-commit-prod
+  <<: *env-prod
+  <<: *deploy
+  tags:
+    - prod
+    - deploy
+  script:
+    - tag="release.$CI_COMMIT_SHORT_SHA"
+    - image_name=$CI_REGISTRY_IMAGE:$tag
+    # Write all set variable from previous step to docker-compose file template
+    - sudo envsubst < docker-compose-front.template.yml > $FRONT_DOCKER_COMPOSE_PATH
+    - prev_build_name=$(grep $CI_REGISTRY_IMAGE $FRONT_DOCKER_COMPOSE_PATH | grep -oE ':\w+(-\w+)*' | grep -oE '\w+(-\w+)*')
+    - echo "Previous container build name - $prev_build_name"
+    - sudo sed -i -e "s|$CI_REGISTRY_IMAGE:$prev_build_name|$image_name|g" $FRONT_DOCKER_COMPOSE_PATH
+    # Replace container out port in docker-compose file
+    - sudo sed -i -e "s|_CONTAINER_OUT_PORT_|$CONTAINER_OUT_PORT|g" $FRONT_DOCKER_COMPOSE_PATH
+    - sudo docker-compose -f $FRONT_DOCKER_COMPOSE_PATH up -d
+    - echo "Deploy stage success!"
+    - sh $APP_PATH/.ci-notify.sh $NOTIFY_URL "Staging front was successfully deployed"
+#endregion
+
+notify_error:
+  stage: notify
+  script:
+    - sh $APP_PATH/.ci-notify.sh $NOTIFY_URL "Front CI deploying failed"
+  when: on_failure

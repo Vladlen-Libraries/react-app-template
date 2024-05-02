@@ -1,0 +1,45 @@
+@import '../../../styles/mixins/media-queries.scss';
+@import '../../../styles/colors.scss';
+
+.sizeSm {
+  font-size: 1.4rem;
+  line-height: 1.8rem;
+}
+.sizeMd {
+  font-size: 1.8rem;
+  line-height: 2.6rem;
+}
+
+.weightSm {
+  font-weight: 400;
+}
+
+.weightMd {
+  font-weight: 500;
+}
+
+.weightLg {
+  font-weight: 600;
+}
+
+.weightXl {
+  font-weight: 700;
+}
+
+.error {
+  color: $field-error-description;
+}
+
+.gray {
+  color: $text-gray;
+}
+
+.alignLeft {
+  text-align: left;
+}
+.alignRight {
+  text-align: right;
+}
+.alignCenter {
+  text-align: center;
+}

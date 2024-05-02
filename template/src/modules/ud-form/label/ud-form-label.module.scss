@@ -1,0 +1,22 @@
+@import '../../../styles/colors.scss';
+
+.label {
+  margin-bottom: 8px;
+  display: inline-block;
+}
+.invalid {
+  color: $field-error-description;
+}
+
+.required {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    content: '*';
+    top: 0;
+    right: -1.5rem;
+    color: $field-error-header;
+    font-size: 1.8rem;
+  }
+}

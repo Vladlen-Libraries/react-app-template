@@ -1,0 +1,16 @@
+@import '../colors.scss';
+
+html,
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 62.5%;
+  letter-spacing: -0.005em;
+  // пока есть проблемы с отображением на iOS 15
+  //font-feature-settings: 'pnum' on, 'lnum' on, 'ordn' on, 'cv01' on, 'cv02' on,
+  //  'cv05' on, 'cv09' on, 'case' on, 'cpsp' on;
+  color: $text-normal;
+}
+
+textarea {
+  font-family: 'Inter', sans-serif;
+}

@@ -1,0 +1,20 @@
+.uploadArea {
+  border: 2px dashed #A1A1A1;
+  padding: 33px 32px 28px 32px;
+  border-radius: 8px;
+  text-align: center;
+  transition: all 120ms ease-in-out;
+}
+
+.uploadAreaHighlighted {
+  border-color: #2471E2;
+  background-color: #EFF3FC;
+}
+
+.danger {
+  border-color: #FFA5A5;
+}
+
+.disabled {
+  opacity: .5;
+}

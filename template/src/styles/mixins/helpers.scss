@@ -1,0 +1,15 @@
+@import './media-queries';
+
+.hide-mobile {
+  @include mobile {
+    display: none !important;
+  }
+}
+
+.show-mobile {
+  display: none;
+
+  @include mobile {
+    display: block;
+  }
+}

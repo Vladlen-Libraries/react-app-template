@@ -1,0 +1,53 @@
+@import '../../../../styles/colors.scss';
+
+.calendar {
+  padding: 1.8rem 2.4rem;
+  padding-bottom: 0.5rem;
+
+  &Header {
+    width: 18rem;
+    display: flex;
+    margin-bottom: 1.8rem;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-transform: capitalize;
+  }
+
+  &Weekend {
+    color: $btn-danger-text;
+  }
+
+  &Grid {
+    display: grid;
+    grid-template: repeat(7, auto) / repeat(7, auto);
+
+    &Cell {
+      display: inline-block;
+      width: 3.6rem;
+      height: 3.6rem;
+      font-size: 1.4rem;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 3.8rem;
+
+      &Selected {
+        color: #ffffff !important;
+        border-radius: 50%;
+        background-color: $bg-red;
+      }
+
+      &Disabled {
+        color: $btn-disable-bg;
+        pointer-events: none;
+      }
+    }
+  }
+
+  &Close {
+    position: absolute;
+    top: 1.6rem;
+    right: 1.6rem;
+  }
+}

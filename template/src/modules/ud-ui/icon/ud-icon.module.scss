@@ -1,0 +1,12 @@
+@import '../../../styles/colors.scss';
+
+.icon {
+  display: inline-block;
+}
+.iconPointer {
+  cursor: pointer;
+}
+
+.danger {
+  color: $btn-danger-text;
+}

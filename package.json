@@ -1,0 +1,31 @@
+{
+  "name": "@getgain/cra-template-spa",
+  "version": "0.0.1",
+  "keywords": [
+    "react",
+    "create-react-app",
+    "template",
+    "getgain-template",
+    "typescript"
+  ],
+  "description": "React template in GetGain team",
+  "scripts": {
+    "test": "exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/getgain-public/libs/cra-template-spa.git"
+  },
+  "author": "Alexey Ryabov <alexey@getgain.ru>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/getgain-public/libs/cra-template-spa/issues"
+  },
+  "homepage": "https://gitlab.com/getgain-public/libs/cra-template-spa#readme",
+  "files": [
+    "template"
+  ]
+}

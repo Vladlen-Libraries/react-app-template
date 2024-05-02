@@ -1,0 +1,83 @@
+{
+    "env": {
+      "browser": true,
+      "es2021": true
+    },
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "paths": ["src"],
+          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        },
+        "react": {
+          "version": "detect"
+        }
+      }
+    },
+    "extends": [
+      "prettier",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:react/recommended",
+      "plugin:prettier/recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:import/typescript"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      },
+      "ecmaVersion": 2020,
+      "sourceType": "module"
+    },
+    "plugins": ["react", "react-hooks", "@typescript-eslint"],
+    "rules": {
+      "camelcase": "off",
+      "comma-dangle": 0,
+      "prettier/prettier": [
+        "error",
+        {
+          "parser": "typescript"
+        }
+      ],
+      "react/react-in-jsx-scope": "off",
+      "react/jsx-filename-extension": [
+        1,
+        {
+          "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        }
+      ],
+      "react/jsx-props-no-spreading": [
+        "error",
+        {
+          "custom": "ignore"
+        }
+      ],
+      "import/prefer-default-export": "off",
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          "js": "never",
+          "jsx": "never",
+          "ts": "never",
+          "tsx": "never"
+        }
+      ],
+      "react/prop-types": "off",
+      "prefer-const": "off",
+      "react/state-in-constructor": "off",
+      "no-use-before-define": "off",
+      "no-param-reassign": "off",
+      "@typescript-eslint/no-use-before-define": [
+        "error",
+        {
+          "functions": false,
+          "classes": false
+        }
+      ],
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn"
+    },
+    "ignorePatterns": ["node_modules", "build", "out"]
+  }

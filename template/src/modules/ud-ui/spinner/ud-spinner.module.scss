@@ -1,0 +1,41 @@
+@import '../../../styles/mixins/media-queries.scss';
+
+.fullScreen {
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageWrap {
+  display: inline-block;
+}
+
+.absCenter {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+
+}
+.imageSM {
+  height: 23px
+}
+.imageMD {
+  height: 80px
+}
+.imageLG {
+
+}

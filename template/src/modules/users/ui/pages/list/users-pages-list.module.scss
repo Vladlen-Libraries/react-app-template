@@ -1,0 +1,94 @@
+@import '../../../../../styles/mixins/media-queries';
+
+.buttonsContainer {
+  background-color: #f2f2f2;
+  border-radius: 12px;
+  padding: 1.2rem 1.6rem;
+}
+
+.buttonUp {
+  position: relative;
+  z-index: 2;
+}
+
+.buttonDown {
+  position: relative;
+  right: 10px;
+  z-index: 1;
+}
+
+.title {
+  margin: 2.4rem 0 1.6rem 0;
+  @include mobile {
+    margin: 1.6rem 0 1.2rem 1.2rem;
+    font-size: 3rem;
+    line-height: 3.8rem;
+  }
+
+  .addUserButton {
+    display: flex;
+
+    img {
+      margin-right: 10px;
+    }
+  }
+
+  .searchInput {
+    margin: 0;
+  }
+
+  .shouldDeleteModal {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 4;
+    background-color: #ffffff;
+    border: 1px solid #ebebeb;
+    box-sizing: border-box;
+    box-shadow: 0px 3px 2px -2px rgba(0, 0, 0, 0.45);
+    border-radius: 12px;
+    width: 436px;
+    padding: 20px 24px;
+  }
+
+  .deleteActions {
+    display: flex;
+    margin-top: 24px;
+  }
+
+  .deleteBtn {
+    background-color: #da2525;
+    margin-right: 24px;
+  }
+
+  .closeBtn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+
+  .deleteNotification {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 4;
+    background-color: #ffffff;
+    border: 1px solid #ebebeb;
+    box-sizing: border-box;
+    box-shadow: 0px 3px 2px -2px rgba(0, 0, 0, 0.45);
+    border-radius: 12px;
+    width: 436px;
+    padding: 20px 24px;
+  }
+
+  .actions {
+    display: flex;
+    margin-top: 24px;
+  }
+
+  .closeBtn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+}

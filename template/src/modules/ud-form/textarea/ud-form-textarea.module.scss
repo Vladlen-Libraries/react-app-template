@@ -1,0 +1,26 @@
+@import '../../../styles/styles.scss';
+
+.textarea {
+  height: 7.4rem;
+  padding: 1.25rem 1.1rem;
+  border: 1px solid $field-normal-stroke;
+  border-radius: 8px;
+  font-size: 1.8rem;
+  outline: none;
+  resize: none;
+  -webkit-appearance: none;
+
+  &:focus {
+    background-color: $field-active-bg;
+    box-shadow: 0 0 0 3px $field-selected-bg;
+  }
+
+  &Block {
+    display: block;
+    width: 100%;
+  }
+
+  &Invalid {
+    box-shadow: 0 0 0 3px $field-error-stroke;
+  }
+}
